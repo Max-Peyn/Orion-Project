@@ -61,13 +61,19 @@ export const Configurator: React.FC = () => {
   });
 
   const loadSprinterModel = async () => {
-    if (!sceneRef.current?.scene || modelsRef.current.sprinter) return;
+    if (!sceneRef.current?.scene) return;
+
+    // Remove existing Sprinter if any
+    if (modelsRef.current.sprinter) {
+      sceneRef.current.scene.remove(modelsRef.current.sprinter);
+      modelsRef.current.sprinter = null;
+    }
 
     try {
       const model = await modelLoadersRef.current.sprinter.load(
         sceneRef.current.scene,
         undefined,
-        true
+        !activeWheels // Hide built-in wheels if custom wheels are active
       );
       modelsRef.current.sprinter = model;
     } catch (error) {
@@ -76,13 +82,19 @@ export const Configurator: React.FC = () => {
   };
 
   const loadPickupModel = async () => {
-    if (!sceneRef.current?.scene || modelsRef.current.pickup) return;
+    if (!sceneRef.current?.scene) return;
+
+    // Remove existing Pickup if any
+    if (modelsRef.current.pickup) {
+      sceneRef.current.scene.remove(modelsRef.current.pickup);
+      modelsRef.current.pickup = null;
+    }
 
     try {
       const model = await modelLoadersRef.current.pickup.load(
         sceneRef.current.scene,
         undefined,
-        true
+        !activeWheels // Hide built-in wheels if custom wheels are active
       );
       modelsRef.current.pickup = model;
     } catch (error) {
@@ -93,17 +105,21 @@ export const Configurator: React.FC = () => {
   useEffect(() => {
     if (!sceneRef.current?.scene) return;
 
+    // Remove all models first
     if (modelsRef.current.sprinter) {
-      modelsRef.current.sprinter.visible = false;
+      sceneRef.current.scene.remove(modelsRef.current.sprinter);
+      modelsRef.current.sprinter = null;
     }
     if (modelsRef.current.pickup) {
-      modelsRef.current.pickup.visible = false;
+      sceneRef.current.scene.remove(modelsRef.current.pickup);
+      modelsRef.current.pickup = null;
     }
 
-    if (currentVehicle === 'sprinter' && modelsRef.current.sprinter) {
-      modelsRef.current.sprinter.visible = true;
-    } else if (currentVehicle === 'pickup' && modelsRef.current.pickup) {
-      modelsRef.current.pickup.visible = true;
+    // Load only the current vehicle
+    if (currentVehicle === 'sprinter') {
+      loadSprinterModel();
+    } else if (currentVehicle === 'pickup') {
+      loadPickupModel();
     }
   }, [currentVehicle]);
 
@@ -122,8 +138,12 @@ export const Configurator: React.FC = () => {
       sceneRef.current!.scene.environment = texture;
     });
 
-    loadSprinterModel();
-    loadPickupModel();
+    // Load only the current vehicle on init
+    if (currentVehicle === 'sprinter') {
+      loadSprinterModel();
+    } else if (currentVehicle === 'pickup') {
+      loadPickupModel();
+    }
 
     return () => {
       Object.values(loaders).forEach(loader => {
