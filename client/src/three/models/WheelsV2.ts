@@ -44,7 +44,7 @@ export class WheelsV2Model {
       this.updatePositions(wheels, isPickup);
     };
     
-    if (onLoad) onLoad(wheels as any);
+    if (onLoad) onLoad(wheels as unknown as THREE.Object3D);
     
     return wheels;
   }

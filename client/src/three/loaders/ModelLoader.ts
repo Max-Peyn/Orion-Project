@@ -31,9 +31,10 @@ export class ModelLoader {
           resolve(model);
         },
         onProgress,
-        (error) => {
-          if (onError) onError(error);
-          reject(error);
+        (error: unknown) => {
+          const err = error instanceof Error ? error : new Error(String(error));
+          if (onError) onError(err);
+          reject(err);
         }
       );
     });
