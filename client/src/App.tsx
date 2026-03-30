@@ -1,10 +1,19 @@
-import './App.css'
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryProvider, RouteProvider } from './providers';
+import { AppRouter } from './routes';
+import './styles/index.css';
 
-function App() {
+export const App: React.FC = () => {
+  return (
+    <QueryProvider>
+      <BrowserRouter>
+        <RouteProvider>
+          <AppRouter />
+        </RouteProvider>
+      </BrowserRouter>
+    </QueryProvider>
+  );
+};
 
-    return (
-        <div></div>
-    )
-}
-
-export default App
+export default App;
