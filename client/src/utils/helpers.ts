@@ -1,4 +1,3 @@
-// Color utilities
 export function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {
@@ -12,7 +11,6 @@ export function rgbToHex(r: number, g: number, b: number): string {
   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
 
-// Validation utilities
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -22,7 +20,6 @@ export function isValidPassword(password: string): boolean {
   return password.length >= 6;
 }
 
-// Format utilities
 export function formatDate(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   return d.toLocaleDateString('en-US', {
@@ -65,7 +62,6 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
   };
 }
 
-// Local storage utilities
 export function getFromStorage<T>(key: string, defaultValue: T): T {
   try {
     const item = localStorage.getItem(key);
@@ -92,7 +88,6 @@ export function removeFromStorage(key: string): void {
   }
 }
 
-// Array utilities
 export function uniqueBy<T>(array: T[], key: keyof T): T[] {
   const seen = new Set();
   return array.filter(item => {

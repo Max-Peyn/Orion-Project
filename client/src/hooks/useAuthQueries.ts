@@ -7,7 +7,6 @@ export const useAuthQueries = () => {
   const queryClient = useQueryClient();
   const { setUser, clearUser } = useAuthStore();
 
-  // Login mutation
   const loginMutation = useMutation({
     mutationFn: (credentials: LoginCredentials) => authService.login(credentials),
     onSuccess: (data) => {
@@ -21,7 +20,6 @@ export const useAuthQueries = () => {
     }
   });
 
-  // Register mutation
   const registerMutation = useMutation({
     mutationFn: (userData: RegisterData) => authService.register(userData),
     onSuccess: (data) => {
@@ -35,7 +33,6 @@ export const useAuthQueries = () => {
     }
   });
 
-  // Logout mutation
   const logoutMutation = useMutation({
     mutationFn: () => authService.logout(),
     onSuccess: () => {
@@ -44,38 +41,32 @@ export const useAuthQueries = () => {
     },
     onError: (error) => {
       console.error('Logout error:', error);
-      // Clear user anyway on logout error
       clearUser();
       queryClient.clear();
     }
   });
 
-  // Current user query
   const userQuery = useQuery({
     queryKey: ['user'],
     queryFn: () => authService.getCurrentUser(),
     retry: false,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   });
 
   return {
-    // Mutations
     login: loginMutation.mutate,
     register: registerMutation.mutate,
     logout: logoutMutation.mutate,
-    
-    // Loading states
+
     isLoggingIn: loginMutation.isPending,
     isRegistering: registerMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
-    
-    // Error states
+
     loginError: loginMutation.error,
     registerError: registerMutation.error,
     logoutError: logoutMutation.error,
-    
-    // User query
+
     userQuery,
     isLoadingUser: userQuery.isLoading,
     userError: userQuery.error,

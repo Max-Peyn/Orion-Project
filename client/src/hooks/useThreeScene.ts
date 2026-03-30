@@ -28,18 +28,15 @@ export const useThreeScene = (options: UseThreeSceneOptions = {}) => {
       height: window.innerHeight
     };
 
-    // Initialize Three.js components
     const scene = createScene();
     const camera = createCamera(sizes);
     const renderer = createRenderer(canvas, sizes);
     const lights = createLights();
     const controls = createControls(camera, canvas);
 
-    // Add lights to scene
     scene.add(lights.directional);
     scene.add(lights.ambient);
 
-    // Store scene reference
     sceneRef.current = {
       scene,
       camera,
@@ -48,14 +45,12 @@ export const useThreeScene = (options: UseThreeSceneOptions = {}) => {
       lights
     };
 
-    // Start animation if enabled
     if (options.enableAnimation !== false) {
       animate(renderer, scene, camera, controls, options.objects);
     }
 
     setIsLoaded(true);
 
-    // Handle window resize
     const handleResize = () => {
       const newSizes = {
         width: window.innerWidth,
@@ -70,7 +65,6 @@ export const useThreeScene = (options: UseThreeSceneOptions = {}) => {
 
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
       renderer.dispose();

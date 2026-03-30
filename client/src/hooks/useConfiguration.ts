@@ -24,7 +24,6 @@ export const useConfiguration = () => {
   const switchVehicle = (vehicle: 'pickup' | 'sprinter') => {
     if (vehicle !== currentVehicle) {
       setCurrentVehicle(vehicle);
-      // Reset accessories when switching vehicles
       Object.keys(accessories).forEach(key => {
         setAccessory(key as keyof typeof accessories, false);
       });
@@ -46,7 +45,6 @@ export const useConfiguration = () => {
   });
 
   return {
-    // State
     currentVehicle,
     activeWheels,
     vehicleColor,
@@ -56,7 +54,6 @@ export const useConfiguration = () => {
     isPickup,
     isSprinter,
 
-    // Actions
     switchVehicle,
     switchWheels,
     setVehicleColor,

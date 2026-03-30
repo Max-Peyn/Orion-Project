@@ -27,11 +27,9 @@ export const useAuth = () => {
   } = useAuthQueries();
 
   useEffect(() => {
-    // Initialize auth manager on mount
     authManager.initialize();
   }, []);
 
-  // Update store when user query succeeds
   useEffect(() => {
     if (userQuery.data?.user) {
       setUser(userQuery.data.user);
@@ -59,12 +57,10 @@ export const useAuth = () => {
     register: handleRegister,
     logout: handleLogout,
     checkAuth,
-    
-    // Error states
+
     loginError,
     registerError,
-    
-    // Loading states
+
     isLoggingIn,
     isRegistering,
     isLoggingOut
