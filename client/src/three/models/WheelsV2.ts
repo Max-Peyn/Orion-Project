@@ -52,17 +52,17 @@ export class WheelsV2Model {
   private getPositions(isPickup: boolean): THREE.Vector3[] {
     if (isPickup) {
       return [
-        new THREE.Vector3(-1.315, 0.35, 1),
-        new THREE.Vector3(1.845, 0.35, 0.9),
-        new THREE.Vector3(-1.14, 0.35, -1),
-        new THREE.Vector3(2, 0.35, -0.9)
+        new THREE.Vector3(-1.315, 0.37, 1),
+        new THREE.Vector3(1.845, 0.37, 0.9),
+        new THREE.Vector3(-1.14, 0.37, -1),
+        new THREE.Vector3(2, 0.37, -0.9)
       ];
     } else {
       return [
-        new THREE.Vector3(-1.75, 0.35, 1.02),
-        new THREE.Vector3(1.845, 0.35, 1.02),
-        new THREE.Vector3(-1.6, 0.35, -1.02),
-        new THREE.Vector3(2, 0.35, -1.02)
+        new THREE.Vector3(-1.75, 0.37, 1.02),
+        new THREE.Vector3(1.845, 0.37, 1.02),
+        new THREE.Vector3(-1.6, 0.37, -1.02),
+        new THREE.Vector3(2, 0.37, -1.02)
       ];
     }
   }
