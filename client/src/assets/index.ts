@@ -1,0 +1,8 @@
+export { default as b1Img } from './b1.png';
+export { default as b2Img } from './b2.png';
+export { default as b3Img } from './b3.png';
+export { default as b4Img } from './b4.png';
+export { default as leftArrowImg } from './left-arrow.png';
+export { default as rightArrowImg } from './right-arrow.png';
+export { default as bgShadowImg } from './bg-shadow.png';
+export { default as favouritesIcon } from './favourites.png';
