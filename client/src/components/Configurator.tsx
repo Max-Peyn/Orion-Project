@@ -21,321 +21,331 @@ import { PlaneObject } from '../three/objects/Plane';
 import type { FavouriteModel } from '../types/managers';
 
 export const Configurator: React.FC = () => {
-  const { canvasRef, sceneRef, isLoaded } = useThreeScene({ enableAnimation: true });
-  const { user } = useAuth();
-  const { 
-    currentVehicle, 
-    activeWheels, 
-    vehicleColor, 
-    switchVehicle, 
-    switchWheels, 
-    setVehicleColor,
-    toggleAccessory 
-  } = useConfiguration();
+    const { canvasRef, sceneRef, isLoaded } = useThreeScene({ enableAnimation: true });
+    const { user } = useAuth();
+    const {
+        currentVehicle,
+        activeWheels,
+        vehicleColor,
+        switchVehicle,
+        switchWheels,
+        setVehicleColor,
+        toggleAccessory
+    } = useConfiguration();
 
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authModalPage, setAuthModalPage] = useState<'login' | 'register'>('login');
-  const [brochuresOpen, setBrochuresOpen] = useState(false);
-  const [favouritesOpen, setFavouritesOpen] = useState(false);
-  const [controlsVisible, setControlsVisible] = useState({
-    wheels: false,
-    roof: false,
-    camping: false
-  });
-
-  const modelsRef = useRef({
-    sprinter: null as THREE.Group | null,
-    pickup: null as THREE.Group | null,
-    wheels: null as THREE.Object3D[] | null,
-    tent: null as THREE.Group | null,
-    roofRack: null as THREE.Group | null
-  });
-
-  const modelLoadersRef = useRef({
-    sprinter: new SprinterModel(),
-    pickup: new PickupModel(),
-    wheelsV1: new WheelsV1Model(),
-    wheelsV2: new WheelsV2Model(),
-    tent: new TentModel(),
-    roofRack: new RoofRackModel()
-  });
-
-  const loadSprinterModel = async () => {
-    if (!sceneRef.current?.scene) return;
-
-    // Remove existing Sprinter if any
-    if (modelsRef.current.sprinter) {
-      sceneRef.current.scene.remove(modelsRef.current.sprinter);
-      modelsRef.current.sprinter = null;
-    }
-
-    try {
-      const model = await modelLoadersRef.current.sprinter.load(
-        sceneRef.current.scene,
-        undefined,
-        !activeWheels // Hide built-in wheels if custom wheels are active
-      );
-      modelsRef.current.sprinter = model;
-    } catch (error) {
-      console.error('Error loading Sprinter model:', error);
-    }
-  };
-
-  const loadPickupModel = async () => {
-    if (!sceneRef.current?.scene) return;
-
-    // Remove existing Pickup if any
-    if (modelsRef.current.pickup) {
-      sceneRef.current.scene.remove(modelsRef.current.pickup);
-      modelsRef.current.pickup = null;
-    }
-
-    try {
-      const model = await modelLoadersRef.current.pickup.load(
-        sceneRef.current.scene,
-        undefined,
-        !activeWheels // Hide built-in wheels if custom wheels are active
-      );
-      modelsRef.current.pickup = model;
-    } catch (error) {
-      console.error('Error loading Pickup model:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (!sceneRef.current?.scene) return;
-
-    // Remove all models first
-    if (modelsRef.current.sprinter) {
-      sceneRef.current.scene.remove(modelsRef.current.sprinter);
-      modelsRef.current.sprinter = null;
-    }
-    if (modelsRef.current.pickup) {
-      sceneRef.current.scene.remove(modelsRef.current.pickup);
-      modelsRef.current.pickup = null;
-    }
-
-    // Load only the current vehicle
-    if (currentVehicle === 'sprinter') {
-      loadSprinterModel();
-    } else if (currentVehicle === 'pickup') {
-      loadPickupModel();
-    }
-  }, [currentVehicle]);
-
-  useEffect(() => {
-    if (!sceneRef.current || !isLoaded) return;
-
-    const loaders = modelLoadersRef.current;
-
-    const plane = PlaneObject.create();
-    sceneRef.current.scene.add(plane);
-
-    const loader = new EXRLoader();
-    loader.load('/texture/studio_small_08_1k.exr', (texture) => {
-      texture.mapping = THREE.EquirectangularReflectionMapping;
-      sceneRef.current!.scene.environmentIntensity = 0.3;
-      sceneRef.current!.scene.environment = texture;
+    const [authModalOpen, setAuthModalOpen] = useState(false);
+    const [authModalPage, setAuthModalPage] = useState<'login' | 'register'>('login');
+    const [brochuresOpen, setBrochuresOpen] = useState(false);
+    const [favouritesOpen, setFavouritesOpen] = useState(false);
+    const [controlsVisible, setControlsVisible] = useState({
+        wheels: false,
+        roof: false,
+        camping: false
     });
 
-    // Load only the current vehicle on init
-    if (currentVehicle === 'sprinter') {
-      loadSprinterModel();
-    } else if (currentVehicle === 'pickup') {
-      loadPickupModel();
-    }
+    const modelsRef = useRef({
+        sprinter: null as THREE.Group | null,
+        pickup: null as THREE.Group | null,
+        wheels: null as THREE.Object3D[] | null,
+        tent: null as THREE.Group | null,
+        roofRack: null as THREE.Group | null
+    });
 
-    return () => {
-      Object.values(loaders).forEach(loader => {
-        if (loader && typeof loader.dispose === 'function') {
-          loader.dispose();
+    const modelLoadersRef = useRef({
+        sprinter: new SprinterModel(),
+        pickup: new PickupModel(),
+        wheelsV1: new WheelsV1Model(),
+        wheelsV2: new WheelsV2Model(),
+        tent: new TentModel(),
+        roofRack: new RoofRackModel()
+    });
+
+    const loadSprinterModel = async () => {
+        if (!sceneRef.current?.scene) return;
+
+        // Remove existing Sprinter if any
+        if (modelsRef.current.sprinter) {
+            sceneRef.current.scene.remove(modelsRef.current.sprinter);
+            modelsRef.current.sprinter = null;
         }
-      });
+
+        try {
+            const model = await modelLoadersRef.current.sprinter.load(
+                sceneRef.current.scene,
+                undefined,
+                !activeWheels // Hide built-in wheels if custom wheels are active
+            );
+            modelsRef.current.sprinter = model;
+        } catch (error) {
+            console.error('Error loading Sprinter model:', error);
+        }
     };
-  }, [isLoaded]);
 
-  useEffect(() => {
-    if (currentVehicle === 'sprinter' && modelsRef.current.sprinter) {
-      modelLoadersRef.current.sprinter.setColor(modelsRef.current.sprinter, vehicleColor);
-    } else if (currentVehicle === 'pickup' && modelsRef.current.pickup) {
-      modelLoadersRef.current.pickup.setColor(modelsRef.current.pickup, vehicleColor);
-    }
-  }, [vehicleColor, currentVehicle]);
+    const loadPickupModel = async () => {
+        if (!sceneRef.current?.scene) return;
 
-  useEffect(() => {
-    if (!sceneRef.current?.scene) return;
-
-    if (controlsVisible.camping) {
-      if (!modelsRef.current.tent) {
-        modelLoadersRef.current.tent.load(sceneRef.current.scene).then(model => {
-          modelsRef.current.tent = model;
-        }).catch(error => console.error('Error loading tent:', error));
-      } else {
-        modelsRef.current.tent.visible = true;
-      }
-    } else if (modelsRef.current.tent) {
-      modelsRef.current.tent.visible = false;
-    }
-
-    if (controlsVisible.roof) {
-      if (!modelsRef.current.roofRack) {
-        modelLoadersRef.current.roofRack.load(sceneRef.current.scene).then(model => {
-          modelsRef.current.roofRack = model;
-        }).catch(error => console.error('Error loading roof rack:', error));
-      } else {
-        modelsRef.current.roofRack.visible = true;
-      }
-    } else if (modelsRef.current.roofRack) {
-      modelsRef.current.roofRack.visible = false;
-    }
-  }, [controlsVisible]);
-
-  useEffect(() => {
-    if (!sceneRef.current?.scene || !currentVehicle) return;
-
-    if (modelsRef.current.wheels) {
-      modelsRef.current.wheels.forEach(wheel => {
-        wheel.traverse((child: THREE.Object3D) => {
-          if (child instanceof THREE.Mesh) {
-            child.geometry?.dispose();
-            if (Array.isArray(child.material)) {
-              child.material.forEach(mat => mat.dispose());
-            } else if (child.material) {
-              child.material.dispose();
-            }
-          }
-        });
-        sceneRef.current!.scene.remove(wheel);
-      });
-      modelsRef.current.wheels = null;
-    }
-
-    if (activeWheels) {
-      const wheelsLoader = activeWheels === 'v1' ? modelLoadersRef.current.wheelsV1 : modelLoadersRef.current.wheelsV2;
-      const isPickup = currentVehicle === 'pickup';
-
-      wheelsLoader.load(sceneRef.current.scene, isPickup).then(wheels => {
-        modelsRef.current.wheels = wheels;
-      }).catch(error => console.error(`Error loading wheels ${activeWheels}:`, error));
-    }
-  }, [activeWheels, currentVehicle]);
-
-  const handleColorChange = (color: string) => {
-    setVehicleColor(color);
-
-    if (currentVehicle === 'sprinter' && modelsRef.current.sprinter) {
-      modelLoadersRef.current.sprinter.setColor(modelsRef.current.sprinter, color);
-    } else if (currentVehicle === 'pickup' && modelsRef.current.pickup) {
-      modelLoadersRef.current.pickup.setColor(modelsRef.current.pickup, color);
-    }
-  };
-
-  const handleVehicleSwitch = (direction: 'left' | 'right') => {
-    const newVehicle = direction === 'right' ? 'pickup' : 'sprinter';
-    switchVehicle(newVehicle);
-  };
-
-  const handleWheelsChange = (wheelsType: 'v1' | 'v2' | null) => {
-    switchWheels(wheelsType);
-  };
-
-  const handleFavouriteSelect = (favourite: FavouriteModel) => {
-    if (favourite.name !== currentVehicle) {
-      switchVehicle(favourite.name as 'pickup' | 'sprinter');
-    }
-    handleColorChange(favourite.color);
-    if (favourite.wheels && favourite.wheels !== 'standard') {
-      switchWheels(favourite.wheels as 'v1' | 'v2');
-    }
-  };
-
-  const handleCategorySelect = (category: string) => {
-    const newControls = { wheels: false, roof: false, camping: false };
-
-    switch (category) {
-      case 'wheels':
-        newControls.wheels = true;
-        break;
-      case 'camping':
-        if (currentVehicle === 'pickup') {
-          newControls.camping = true;
-          toggleAccessory('tent');
-        } else {
-          console.warn('Camping tent is only available for PickUp model!');
-          return;
+        // Remove existing Pickup if any
+        if (modelsRef.current.pickup) {
+            sceneRef.current.scene.remove(modelsRef.current.pickup);
+            modelsRef.current.pickup = null;
         }
-        break;
-    }
 
-    setControlsVisible(newControls);
-  };
+        try {
+            const model = await modelLoadersRef.current.pickup.load(
+                sceneRef.current.scene,
+                undefined,
+                !activeWheels // Hide built-in wheels if custom wheels are active
+            );
+            modelsRef.current.pickup = model;
+        } catch (error) {
+            console.error('Error loading Pickup model:', error);
+        }
+    };
 
-  return (
-    <div className="configurator">
-      <canvas ref={canvasRef} className="three-canvas" />
+    useEffect(() => {
+        if (!sceneRef.current?.scene) return;
 
-      <Navbar
-        user={user}
-        onAuthClick={(type) => {
-          setAuthModalPage(type);
-          setAuthModalOpen(true);
-        }}
-        onBrochuresClick={() => setBrochuresOpen(true)}
-        onFavouritesClick={() => setFavouritesOpen(true)}
-      />
+        // Remove all models first
+        if (modelsRef.current.sprinter) {
+            sceneRef.current.scene.remove(modelsRef.current.sprinter);
+            modelsRef.current.sprinter = null;
+        }
+        if (modelsRef.current.pickup) {
+            sceneRef.current.scene.remove(modelsRef.current.pickup);
+            modelsRef.current.pickup = null;
+        }
 
-      <BackgroundShadow />
+        // Load only the current vehicle
+        if (currentVehicle === 'sprinter') {
+            loadSprinterModel();
+        } else if (currentVehicle === 'pickup') {
+            loadPickupModel();
+        }
+    }, [currentVehicle]);
 
-      <NavigationArrows onNavigate={handleVehicleSwitch} />
+    useEffect(() => {
+        if (!sceneRef.current || !isLoaded) return;
 
-      <ModelTitle
-        modelName={currentVehicle === 'pickup' ? 'PickUp' : 'Sprinter'}
-        color={vehicleColor}
-        wheels={activeWheels || 'standard'}
-      />
+        const loaders = modelLoadersRef.current;
 
-      <div className="container">
-        <div className="left-panel">
-          <button
-            className={`left-btn ${controlsVisible.wheels ? 'active' : ''}`}
-            onClick={() => handleCategorySelect('wheels')}
-          >
-            Wheels
-          </button>
-          {currentVehicle === 'pickup' && (
-            <button
-              className={`left-btn ${controlsVisible.camping ? 'active' : ''}`}
-              onClick={() => handleCategorySelect('camping')}
-            >
-              Camping
-            </button>
-          )}
+        const plane = PlaneObject.create();
+        sceneRef.current.scene.add(plane);
+
+        const loader = new EXRLoader();
+        const scene = sceneRef.current!.scene;
+        const renderer = sceneRef.current.renderer;
+
+        const pmrem = new THREE.PMREMGenerator(renderer);
+
+        loader.load('texture/studio_small_08_1k.exr', (texture) => {
+
+            const envMap = pmrem.fromEquirectangular(texture).texture;
+
+            scene.environment = envMap;
+            // scene.background = texture;
+            scene.environmentRotation = new THREE.Euler(0, Math.PI / 2, 0)
+
+
+            texture.dispose();
+        });
+
+        // Load only the current vehicle on init
+        if (currentVehicle === 'sprinter') {
+            loadSprinterModel();
+        } else if (currentVehicle === 'pickup') {
+            loadPickupModel();
+        }
+
+        return () => {
+            Object.values(loaders).forEach(loader => {
+                if (loader && typeof loader.dispose === 'function') {
+                    loader.dispose();
+                }
+            });
+        };
+    }, [isLoaded]);
+    useEffect(() => {
+        if (currentVehicle === 'sprinter' && modelsRef.current.sprinter) {
+            modelLoadersRef.current.sprinter.setColor(modelsRef.current.sprinter, vehicleColor);
+        } else if (currentVehicle === 'pickup' && modelsRef.current.pickup) {
+            modelLoadersRef.current.pickup.setColor(modelsRef.current.pickup, vehicleColor);
+        }
+    }, [vehicleColor, currentVehicle]);
+
+    useEffect(() => {
+        if (!sceneRef.current?.scene) return;
+
+        if (controlsVisible.camping) {
+            if (!modelsRef.current.tent) {
+                modelLoadersRef.current.tent.load(sceneRef.current.scene).then(model => {
+                    modelsRef.current.tent = model;
+                }).catch(error => console.error('Error loading tent:', error));
+            } else {
+                modelsRef.current.tent.visible = true;
+            }
+        } else if (modelsRef.current.tent) {
+            modelsRef.current.tent.visible = false;
+        }
+
+        if (controlsVisible.roof) {
+            if (!modelsRef.current.roofRack) {
+                modelLoadersRef.current.roofRack.load(sceneRef.current.scene).then(model => {
+                    modelsRef.current.roofRack = model;
+                }).catch(error => console.error('Error loading roof rack:', error));
+            } else {
+                modelsRef.current.roofRack.visible = true;
+            }
+        } else if (modelsRef.current.roofRack) {
+            modelsRef.current.roofRack.visible = false;
+        }
+    }, [controlsVisible]);
+
+    useEffect(() => {
+        if (!sceneRef.current?.scene || !currentVehicle) return;
+
+        if (modelsRef.current.wheels) {
+            modelsRef.current.wheels.forEach(wheel => {
+                wheel.traverse((child: THREE.Object3D) => {
+                    if (child instanceof THREE.Mesh) {
+                        child.geometry?.dispose();
+                        if (Array.isArray(child.material)) {
+                            child.material.forEach(mat => mat.dispose());
+                        } else if (child.material) {
+                            child.material.dispose();
+                        }
+                    }
+                });
+                sceneRef.current!.scene.remove(wheel);
+            });
+            modelsRef.current.wheels = null;
+        }
+
+        if (activeWheels) {
+            const wheelsLoader = activeWheels === 'v1' ? modelLoadersRef.current.wheelsV1 : modelLoadersRef.current.wheelsV2;
+            const isPickup = currentVehicle === 'pickup';
+
+            wheelsLoader.load(sceneRef.current.scene, isPickup).then(wheels => {
+                modelsRef.current.wheels = wheels;
+            }).catch(error => console.error(`Error loading wheels ${activeWheels}:`, error));
+        }
+    }, [activeWheels, currentVehicle]);
+
+    const handleColorChange = (color: string) => {
+        setVehicleColor(color);
+
+        if (currentVehicle === 'sprinter' && modelsRef.current.sprinter) {
+            modelLoadersRef.current.sprinter.setColor(modelsRef.current.sprinter, color);
+        } else if (currentVehicle === 'pickup' && modelsRef.current.pickup) {
+            modelLoadersRef.current.pickup.setColor(modelsRef.current.pickup, color);
+        }
+    };
+
+    const handleVehicleSwitch = (direction: 'left' | 'right') => {
+        const newVehicle = direction === 'right' ? 'pickup' : 'sprinter';
+        switchVehicle(newVehicle);
+    };
+
+    const handleWheelsChange = (wheelsType: 'v1' | 'v2' | null) => {
+        switchWheels(wheelsType);
+    };
+
+    const handleFavouriteSelect = (favourite: FavouriteModel) => {
+        if (favourite.name !== currentVehicle) {
+            switchVehicle(favourite.name as 'pickup' | 'sprinter');
+        }
+        handleColorChange(favourite.color);
+        if (favourite.wheels && favourite.wheels !== 'standard') {
+            switchWheels(favourite.wheels as 'v1' | 'v2');
+        }
+    };
+
+    const handleCategorySelect = (category: string) => {
+        const newControls = { wheels: false, roof: false, camping: false };
+
+        switch (category) {
+            case 'wheels':
+                newControls.wheels = true;
+                break;
+            case 'camping':
+                if (currentVehicle === 'pickup') {
+                    newControls.camping = true;
+                    toggleAccessory('tent');
+                } else {
+                    console.warn('Camping tent is only available for PickUp model!');
+                    return;
+                }
+                break;
+        }
+
+        setControlsVisible(newControls);
+    };
+
+    return (
+        <div className="configurator">
+            <canvas ref={canvasRef} className="three-canvas" />
+
+            <Navbar
+                user={user}
+                onAuthClick={(type) => {
+                    setAuthModalPage(type);
+                    setAuthModalOpen(true);
+                }}
+                onBrochuresClick={() => setBrochuresOpen(true)}
+                onFavouritesClick={() => setFavouritesOpen(true)}
+            />
+
+            <BackgroundShadow />
+
+            <NavigationArrows onNavigate={handleVehicleSwitch} />
+
+            <ModelTitle
+                modelName={currentVehicle === 'pickup' ? 'PickUp' : 'Sprinter'}
+                color={vehicleColor}
+                wheels={activeWheels || 'standard'}
+            />
+
+            <div className="container">
+                <div className="left-panel">
+                    <button
+                        className={`left-btn ${controlsVisible.wheels ? 'active' : ''}`}
+                        onClick={() => handleCategorySelect('wheels')}
+                    >
+                        Wheels
+                    </button>
+                    {currentVehicle === 'pickup' && (
+                        <button
+                            className={`left-btn ${controlsVisible.camping ? 'active' : ''}`}
+                            onClick={() => handleCategorySelect('camping')}
+                        >
+                            Camping
+                        </button>
+                    )}
+                </div>
+
+                <ColorSwitcher onColorChange={handleColorChange} />
+            </div>
+
+            {controlsVisible.wheels && (
+                <WheelsSwitcher onWheelsChange={handleWheelsChange} />
+            )}
+
+            <AuthModal
+                isOpen={authModalOpen}
+                onClose={() => setAuthModalOpen(false)}
+                initialPage={authModalPage}
+                onAuthSuccess={() => setAuthModalOpen(false)}
+            />
+
+            <BrochuresModal
+                isOpen={brochuresOpen}
+                onClose={() => setBrochuresOpen(false)}
+            />
+
+            <FavouritesModal
+                isOpen={favouritesOpen}
+                onClose={() => setFavouritesOpen(false)}
+                onSelectFavourite={handleFavouriteSelect}
+            />
         </div>
-
-        <ColorSwitcher onColorChange={handleColorChange} />
-      </div>
-
-      {controlsVisible.wheels && (
-        <WheelsSwitcher onWheelsChange={handleWheelsChange} />
-      )}
-
-      <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        initialPage={authModalPage}
-        onAuthSuccess={() => setAuthModalOpen(false)}
-      />
-
-      <BrochuresModal
-        isOpen={brochuresOpen}
-        onClose={() => setBrochuresOpen(false)}
-      />
-
-      <FavouritesModal
-        isOpen={favouritesOpen}
-        onClose={() => setFavouritesOpen(false)}
-        onSelectFavourite={handleFavouriteSelect}
-      />
-    </div>
-  );
+    );
 };
