@@ -2,15 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useAuth, useConfiguration } from '../hooks';
 import { Canvas3D } from './Canvas3D';
-import { Navbar } from './Navbar';
-import { AuthModal } from './modals/AuthModal';
-import { ModelTitle } from './ui/ModelTitle';
-import { NavigationArrows } from './ui/NavigationArrows';
-import { BackgroundShadow } from './ui/BackgroundShadow';
-import { ColorSwitcher } from './controls/ColorSwitcher';
-import { WheelsSwitcher } from './controls/WheelsSwitcher';
-import { FavouritesModal } from './FavouritesModal';
-import { BrochuresModal } from './BrochuresModal';
+import { UIHeader } from './UIHeader';
+import { ControlsPanel } from './ControlsPanel';
+import { ModalsSection } from './ModalsSection';
 import { SprinterModel } from '../three/models/Sprinter';
 import { PickupModel } from '../three/models/Pickup';
 import { WheelsV1Model } from '../three/models/WheelsV1';
@@ -242,67 +236,42 @@ export const Configurator: React.FC = () => {
     <div className="configurator">
       <Canvas3D onSceneReady={(ref) => { sceneRef.current = ref.current; }} />
 
-      <Navbar
-        user={user}
-        onAuthClick={(type) => {
-          setAuthModalPage(type);
-          setAuthModalOpen(true);
-        }}
-        onBrochuresClick={() => setBrochuresOpen(true)}
-        onFavouritesClick={() => setFavouritesOpen(true)}
-      />
+      {currentVehicle && (
+        <>
+          <UIHeader
+            user={user}
+            currentVehicle={currentVehicle}
+            vehicleColor={vehicleColor}
+            activeWheels={activeWheels}
+            onAuthClick={(type) => {
+              setAuthModalPage(type);
+              setAuthModalOpen(true);
+            }}
+            onBrochuresClick={() => setBrochuresOpen(true)}
+            onFavouritesClick={() => setFavouritesOpen(true)}
+            onNavigate={handleVehicleSwitch}
+          />
 
-      <BackgroundShadow />
-
-      <NavigationArrows onNavigate={handleVehicleSwitch} />
-
-      <ModelTitle
-        modelName={currentVehicle === 'pickup' ? 'PickUp' : 'Sprinter'}
-        color={vehicleColor}
-        wheels={activeWheels || 'standard'}
-      />
-
-      <div className="container">
-        <div className="left-panel">
-          <button
-            className={`left-btn ${controlsVisible.wheels ? 'active' : ''}`}
-            onClick={() => handleCategorySelect('wheels')}
-          >
-            Wheels
-          </button>
-          {currentVehicle === 'pickup' && (
-            <button
-              className={`left-btn ${controlsVisible.camping ? 'active' : ''}`}
-              onClick={() => handleCategorySelect('camping')}
-            >
-              Camping
-            </button>
-          )}
-        </div>
-
-        <ColorSwitcher onColorChange={handleColorChange} />
-      </div>
-
-      {controlsVisible.wheels && (
-        <WheelsSwitcher onWheelsChange={handleWheelsChange} />
+          <ControlsPanel
+            currentVehicle={currentVehicle}
+            controlsVisible={controlsVisible}
+            onCategorySelect={handleCategorySelect}
+            onColorChange={handleColorChange}
+            onWheelsChange={handleWheelsChange}
+          />
+        </>
       )}
 
-      <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        initialPage={authModalPage}
+      <ModalsSection
+        authModalOpen={authModalOpen}
+        authModalPage={authModalPage}
+        brochuresOpen={brochuresOpen}
+        favouritesOpen={favouritesOpen}
+        onAuthClose={() => setAuthModalOpen(false)}
         onAuthSuccess={() => setAuthModalOpen(false)}
-      />
-
-      <BrochuresModal
-        isOpen={brochuresOpen}
-        onClose={() => setBrochuresOpen(false)}
-      />
-
-      <FavouritesModal
-        isOpen={favouritesOpen}
-        onClose={() => setFavouritesOpen(false)}
-        onSelectFavourite={handleFavouriteSelect}
+        onBrochuresClose={() => setBrochuresOpen(false)}
+        onFavouritesClose={() => setFavouritesOpen(false)}
+        onFavouriteSelect={handleFavouriteSelect}
       />
     </div>
   );
