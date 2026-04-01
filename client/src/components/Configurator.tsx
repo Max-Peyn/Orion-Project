@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
-import { useThreeScene, useAuth, useConfiguration } from '../hooks';
+import { useAuth, useConfiguration } from '../hooks';
+import { Canvas3D } from './Canvas3D';
 import { Navbar } from './Navbar';
 import { AuthModal } from './modals/AuthModal';
 import { ModelTitle } from './ui/ModelTitle';
@@ -17,11 +17,10 @@ import { WheelsV1Model } from '../three/models/WheelsV1';
 import { WheelsV2Model } from '../three/models/WheelsV2';
 import { TentModel } from '../three/models/Tent';
 import { RoofRackModel } from '../three/models/RoofRack';
-import { PlaneObject } from '../three/objects/Plane';
 import type { FavouriteModel } from '../types/managers';
 
 export const Configurator: React.FC = () => {
-  const { canvasRef, sceneRef, isLoaded } = useThreeScene({ enableAnimation: true });
+  const sceneRef = useRef<any>(null);
   const { user } = useAuth();
   const { 
     currentVehicle, 
@@ -122,37 +121,6 @@ export const Configurator: React.FC = () => {
       loadPickupModel();
     }
   }, [currentVehicle]);
-
-  useEffect(() => {
-    if (!sceneRef.current || !isLoaded) return;
-
-    const loaders = modelLoadersRef.current;
-
-    const plane = PlaneObject.create();
-    sceneRef.current.scene.add(plane);
-
-    const loader = new EXRLoader();
-    loader.load('/texture/studio_small_08_1k.exr', (texture) => {
-      texture.mapping = THREE.EquirectangularReflectionMapping;
-      sceneRef.current!.scene.environmentIntensity = 0.3;
-      sceneRef.current!.scene.environment = texture;
-    });
-
-    // Load only the current vehicle on init
-    if (currentVehicle === 'sprinter') {
-      loadSprinterModel();
-    } else if (currentVehicle === 'pickup') {
-      loadPickupModel();
-    }
-
-    return () => {
-      Object.values(loaders).forEach(loader => {
-        if (loader && typeof loader.dispose === 'function') {
-          loader.dispose();
-        }
-      });
-    };
-  }, [isLoaded]);
 
   useEffect(() => {
     if (currentVehicle === 'sprinter' && modelsRef.current.sprinter) {
@@ -272,7 +240,7 @@ export const Configurator: React.FC = () => {
 
   return (
     <div className="configurator">
-      <canvas ref={canvasRef} className="three-canvas" />
+      <Canvas3D onSceneReady={(ref) => { sceneRef.current = ref.current; }} />
 
       <Navbar
         user={user}
