@@ -1,6 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useAuth, useConfiguration } from '../hooks';
 import { useVehicleModels } from '../hooks/useVehicleModels';
+import { useModalsState } from '../hooks/useModalsState';
+import { useControlsState } from '../hooks/useControlsState';
 import { Canvas3D } from './Canvas3D';
 import { UIHeader } from './UIHeader';
 import { ControlsPanel } from './ControlsPanel';
@@ -20,22 +22,15 @@ export const Configurator: React.FC = () => {
     toggleAccessory 
   } = useConfiguration();
 
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authModalPage, setAuthModalPage] = useState<'login' | 'register'>('login');
-  const [brochuresOpen, setBrochuresOpen] = useState(false);
-  const [favouritesOpen, setFavouritesOpen] = useState(false);
-  const [controlsVisible, setControlsVisible] = useState({
-    wheels: false,
-    roof: false,
-    camping: false
-  });
+  const modalsState = useModalsState();
+  const controlsState = useControlsState();
 
   const { modelLoadersRef, modelsRef } = useVehicleModels({
     sceneRef,
     currentVehicle,
     activeWheels,
     vehicleColor,
-    controlsVisible,
+    controlsVisible: controlsState.controlsVisible,
   });
 
   const handleColorChange = (color: string) => {
@@ -68,24 +63,7 @@ export const Configurator: React.FC = () => {
   };
 
   const handleCategorySelect = (category: string) => {
-    const newControls = { wheels: false, roof: false, camping: false };
-
-    switch (category) {
-      case 'wheels':
-        newControls.wheels = true;
-        break;
-      case 'camping':
-        if (currentVehicle === 'pickup') {
-          newControls.camping = true;
-          toggleAccessory('tent');
-        } else {
-          console.warn('Camping tent is only available for PickUp model!');
-          return;
-        }
-        break;
-    }
-
-    setControlsVisible(newControls);
+    controlsState.handleCategorySelect(category, currentVehicle, toggleAccessory);
   };
 
   return (
@@ -99,18 +77,15 @@ export const Configurator: React.FC = () => {
             currentVehicle={currentVehicle}
             vehicleColor={vehicleColor}
             activeWheels={activeWheels}
-            onAuthClick={(type) => {
-              setAuthModalPage(type);
-              setAuthModalOpen(true);
-            }}
-            onBrochuresClick={() => setBrochuresOpen(true)}
-            onFavouritesClick={() => setFavouritesOpen(true)}
+            onAuthClick={modalsState.openAuthModal}
+            onBrochuresClick={modalsState.openBrochures}
+            onFavouritesClick={modalsState.openFavourites}
             onNavigate={handleVehicleSwitch}
           />
 
           <ControlsPanel
             currentVehicle={currentVehicle}
-            controlsVisible={controlsVisible}
+            controlsVisible={controlsState.controlsVisible}
             onCategorySelect={handleCategorySelect}
             onColorChange={handleColorChange}
             onWheelsChange={handleWheelsChange}
@@ -119,14 +94,14 @@ export const Configurator: React.FC = () => {
       )}
 
       <ModalsSection
-        authModalOpen={authModalOpen}
-        authModalPage={authModalPage}
-        brochuresOpen={brochuresOpen}
-        favouritesOpen={favouritesOpen}
-        onAuthClose={() => setAuthModalOpen(false)}
-        onAuthSuccess={() => setAuthModalOpen(false)}
-        onBrochuresClose={() => setBrochuresOpen(false)}
-        onFavouritesClose={() => setFavouritesOpen(false)}
+        authModalOpen={modalsState.authModalOpen}
+        authModalPage={modalsState.authModalPage}
+        brochuresOpen={modalsState.brochuresOpen}
+        favouritesOpen={modalsState.favouritesOpen}
+        onAuthClose={modalsState.closeAuthModal}
+        onAuthSuccess={modalsState.closeAuthModal}
+        onBrochuresClose={modalsState.closeBrochures}
+        onFavouritesClose={modalsState.closeFavourites}
         onFavouriteSelect={handleFavouriteSelect}
       />
     </div>
