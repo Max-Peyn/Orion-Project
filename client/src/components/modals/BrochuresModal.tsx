@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrochuresPage } from '../pages/BrochuresPage';
+import { BrochuresPage } from '../../pages/BrochuresPage';
 
 interface BrochuresModalProps {
   isOpen: boolean;

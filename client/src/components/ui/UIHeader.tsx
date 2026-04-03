@@ -1,9 +1,9 @@
 import React from 'react';
-import { Navbar } from './Navbar';
-import { ModelTitle } from './ui/ModelTitle';
-import { NavigationArrows } from './ui/NavigationArrows';
-import { BackgroundShadow } from './ui/BackgroundShadow';
-import type { User } from '../handlers/loginHandlers';
+import { Navbar } from '../Navigation';
+import { ModelTitle } from './ModelTitle';
+import { NavigationArrows } from '../Navigation';
+import { BackgroundShadow } from './BackgroundShadow';
+import type { User } from '../../handlers/loginHandlers';
 
 interface UIHeaderProps {
   user: User | null;

@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
-import { useAuth, useConfiguration } from '../hooks';
-import { useVehicleModels } from '../hooks/useVehicleModels';
-import { useModalsState } from '../hooks/useModalsState';
-import { useControlsState } from '../hooks/useControlsState';
-import { Canvas3D } from './Canvas3D';
-import { UIHeader } from './UIHeader';
-import { ControlsPanel } from './ControlsPanel';
-import { ModalsSection } from './ModalsSection';
-import type { FavouriteModel } from '../types/managers';
+import { useAuth, useConfiguration } from '../../hooks';
+import { useVehicleModels } from '../../hooks/useVehicleModels';
+import { useModalsState } from '../../hooks/useModalsState';
+import { useControlsState } from '../../hooks/useControlsState';
+import { Canvas3D } from '../Canvas';
+import { UIHeader } from '../ui';
+import { ControlsPanel } from '../controls';
+import { ModalsSection } from '../modals';
+import type { FavouriteModel } from '../../types/managers';
 
 export const Configurator: React.FC = () => {
   const sceneRef = useRef<any>(null);
