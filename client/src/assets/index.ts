@@ -6,3 +6,4 @@ export { default as leftArrowImg } from './left-arrow.png';
 export { default as rightArrowImg } from './right-arrow.png';
 export { default as bgShadowImg } from './bg-shadow.png';
 export { default as favouritesIcon } from './favourites.png';
+export { default as videoSrc } from './video.mp4';
