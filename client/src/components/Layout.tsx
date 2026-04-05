@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { Navbar } from './Navbar';
+import { Navbar } from './Navigation';
 import { useAuth } from '../hooks';
 
 export const Layout: React.FC = () => {
