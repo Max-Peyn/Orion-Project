@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserProfile } from './ui/UserProfile';
+import { UserProfile } from '../ui';
 
 interface NavbarProps {
   onAuthClick?: (type: 'login' | 'register') => void;

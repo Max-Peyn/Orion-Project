@@ -1,8 +1,8 @@
 import React from 'react';
-import { AuthModal } from './modals/AuthModal';
+import { AuthModal } from './AuthModal';
 import { BrochuresModal } from './BrochuresModal';
 import { FavouritesModal } from './FavouritesModal';
-import type { FavouriteModel } from '../types/managers';
+import type { FavouriteModel } from '../../types/managers';
 
 interface ModalsSectionProps {
   authModalOpen: boolean;

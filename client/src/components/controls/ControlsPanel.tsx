@@ -1,6 +1,6 @@
 import React from 'react';
-import { ColorSwitcher } from './controls/ColorSwitcher';
-import { WheelsSwitcher } from './controls/WheelsSwitcher';
+import { ColorSwitcher } from './ColorSwitcher';
+import { WheelsSwitcher } from './WheelsSwitcher';
 
 interface ControlsPanelProps {
   currentVehicle: 'sprinter' | 'pickup';

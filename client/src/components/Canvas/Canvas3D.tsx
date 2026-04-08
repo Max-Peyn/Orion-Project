@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
-import { useThreeScene } from '../hooks/useThreeScene';
-import { PlaneObject } from '../three/objects/Plane';
+import { useThreeScene } from '../../hooks/useThreeScene';
+import { PlaneObject } from '../../three/objects/Plane';
 
 interface Canvas3DProps {
   onSceneReady: (sceneRef: React.MutableRefObject<any>) => void;

@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+
 import { useAuth, useConfiguration } from '../hooks';
 import { useVehicleModels } from '../hooks/useVehicleModels';
 import { useModalsState } from '../hooks/useModalsState';
@@ -9,6 +10,7 @@ import { ControlsPanel } from './ControlsPanel';
 import { ModalsSection } from './ModalsSection';
 import type { FavouriteModel } from '../types/managers';
 import { ThreeReact } from '../three/init/react';
+
 
 export const Configurator: React.FC = () => {
     const sceneRef = useRef<any>(null);
