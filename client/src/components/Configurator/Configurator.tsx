@@ -4,7 +4,7 @@ import { useAuth, useConfiguration } from '../../hooks';
 import { useVehicleModels } from '../../hooks/useVehicleModels';
 import { useModalsState } from '../../hooks/useModalsState';
 import { useControlsState } from '../../hooks/useControlsState';
-import { Canvas3D } from '../Canvas/Canvas3D';
+// import { Canvas3D } from '../Canvas/Canvas3D';
 import { UIHeader } from '../ui/UIHeader';
 import { ControlsPanel } from '../controls/ControlsPanel';
 import { ModalsSection } from '../modals/ModalsSection';
