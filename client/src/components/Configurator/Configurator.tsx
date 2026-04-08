@@ -1,15 +1,15 @@
 import React, { useRef } from 'react';
 
-import { useAuth, useConfiguration } from '../hooks';
-import { useVehicleModels } from '../hooks/useVehicleModels';
-import { useModalsState } from '../hooks/useModalsState';
-import { useControlsState } from '../hooks/useControlsState';
-import { Canvas3D } from './Canvas3D';
-import { UIHeader } from './UIHeader';
-import { ControlsPanel } from './ControlsPanel';
-import { ModalsSection } from './ModalsSection';
-import type { FavouriteModel } from '../types/managers';
-import { ThreeReact } from '../three/init/react';
+import { useAuth, useConfiguration } from '../../hooks';
+import { useVehicleModels } from '../../hooks/useVehicleModels';
+import { useModalsState } from '../../hooks/useModalsState';
+import { useControlsState } from '../../hooks/useControlsState';
+import { Canvas3D } from '../Canvas/Canvas3D';
+import { UIHeader } from '../ui/UIHeader';
+import { ControlsPanel } from '../controls/ControlsPanel';
+import { ModalsSection } from '../modals/ModalsSection';
+import type { FavouriteModel } from '../../types/managers';
+import { ThreeReact } from '../../three/init/react';
 
 
 export const Configurator: React.FC = () => {
