@@ -6,6 +6,6 @@ export function createRenderer(canvas: HTMLCanvasElement, sizes: Sizes): THREE.W
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   return renderer;
 }
