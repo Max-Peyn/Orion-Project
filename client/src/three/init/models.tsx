@@ -7,7 +7,7 @@ type ModelsProps = {
     color: string;
 }
 
-export const Models:React.FC<ModelsProps> = ({color = '#000'}) => {
+export const Models:React.FC<ModelsProps> = ({color}) => {
     const { scene } = useGLTF('/models/mersedes/SprinterOptimized.glb');
     useEffect(() => {
         scene.traverse((child) => {
@@ -18,11 +18,11 @@ export const Models:React.FC<ModelsProps> = ({color = '#000'}) => {
             }
             if (child instanceof THREE.Mesh && child.material) {
                 if (child.name.includes('Carrosserie') || child.material.name === 'Carrosserie') {
-                    applyMaterialProps(child.material, {color:color});
+                    applyMaterialProps(child.material, {color});
                 }
             }
         });
-    }, [scene])
+    }, [scene, color])
     return (
         <primitive
             object={scene}
