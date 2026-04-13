@@ -1,8 +1,13 @@
 import * as THREE from 'three' // <-- це потрібно лише для типів 
 import { useGLTF } from "@react-three/drei"
-import { useEffect } from "react"
+import React, { useEffect } from "react"
 import { applyMaterialProps } from '../utils/materialUtils'
-export const Models = () => {
+
+type ModelsProps = {
+    color: string;
+}
+
+export const Models:React.FC<ModelsProps> = ({color}) => {
     const { scene } = useGLTF('/models/mersedes/SprinterOptimized.glb');
     useEffect(() => {
         scene.traverse((child) => {
@@ -13,11 +18,11 @@ export const Models = () => {
             }
             if (child instanceof THREE.Mesh && child.material) {
                 if (child.name.includes('Carrosserie') || child.material.name === 'Carrosserie') {
-                    applyMaterialProps(child.material, {color: 'red'});
+                    applyMaterialProps(child.material, {color});
                 }
             }
         });
-    }, [scene])
+    }, [scene, color])
     return (
         <primitive
             object={scene}
