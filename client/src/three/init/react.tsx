@@ -1,7 +1,11 @@
 import { Canvas } from "@react-three/fiber"
 import { Environment, OrbitControls } from "@react-three/drei"
 import { Models } from "./models";
-export const ThreeReact = () => {
+import type React from "react";
+type ThreeReactProps = {
+    color: string;
+}
+export const ThreeReact:React.FC<ThreeReactProps> = ({color}) => {
     return (
         <Canvas
             onCreated={({ gl }) => {
@@ -32,7 +36,7 @@ export const ThreeReact = () => {
             <OrbitControls 
                 maxPolarAngle={Math.PI * .55}
                 maxDistance={7}/>
-            <Models />
+            <Models color={color}/>
         </Canvas>
     )
 }

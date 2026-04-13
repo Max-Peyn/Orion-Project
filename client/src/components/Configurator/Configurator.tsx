@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { useAuth, useConfiguration } from '../../hooks';
 import { useVehicleModels } from '../../hooks/useVehicleModels';
@@ -24,6 +24,10 @@ export const Configurator: React.FC = () => {
         setVehicleColor,
         toggleAccessory
     } = useConfiguration();
+
+
+    const [colors, setColors] = useState('')
+
 
     const modalsState = useModalsState();
     const controlsState = useControlsState();
@@ -72,7 +76,7 @@ export const Configurator: React.FC = () => {
     return (
         <div className="configurator">
             {/* <Canvas3D onSceneReady={(ref) => { sceneRef.current = ref.current; }} /> */}
-            <ThreeReact/>
+            <ThreeReact color={colors}/>
             {currentVehicle && (
                 <>
                     <UIHeader
@@ -90,7 +94,7 @@ export const Configurator: React.FC = () => {
                         currentVehicle={currentVehicle}
                         controlsVisible={controlsState.controlsVisible}
                         onCategorySelect={handleCategorySelect}
-                        onColorChange={handleColorChange}
+                        onColorChange={setColors}
                         onWheelsChange={handleWheelsChange}
                     />
                 </>
