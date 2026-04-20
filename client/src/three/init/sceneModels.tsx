@@ -1,11 +1,13 @@
 import { Canvas } from "@react-three/fiber"
 import { Environment, OrbitControls } from "@react-three/drei"
-import { Models } from "./models";
+import { ModelSprinter } from "./modelSprinter";
 import type React from "react";
+import { ModelPickUp } from "./modelPickUp";
 type ThreeReactProps = {
     color: string;
+    currentVehicle:string;
 }
-export const ThreeReact:React.FC<ThreeReactProps> = ({color}) => {
+export const SceneModels:React.FC<ThreeReactProps> = ({color, currentVehicle}) => {
     return (
         <Canvas
             onCreated={({ gl }) => {
@@ -16,13 +18,13 @@ export const ThreeReact:React.FC<ThreeReactProps> = ({color}) => {
             camera={{ position: [3, 0, 4] }}>
             <Environment
                 files="/texture/studio_small_08_1k.exr"
-                environmentIntensity={0.4}
+                environmentIntensity={.4}
             />
-            <ambientLight intensity={0.3}/>
+            <ambientLight intensity={.4}/>
             <directionalLight
                 shadow-mapSize-width={512}
                 shadow-mapSize-height={512}
-                position={[0, 5, 0]}
+                position={[0, 3, 0]}
                 castShadow
                 intensity={1.2}
             />
@@ -36,7 +38,7 @@ export const ThreeReact:React.FC<ThreeReactProps> = ({color}) => {
             <OrbitControls 
                 maxPolarAngle={Math.PI * .55}
                 maxDistance={7}/>
-            <Models color={color}/>
+            {currentVehicle === 'right' ? <ModelPickUp color={color}/> : <ModelSprinter color={color}/>}
         </Canvas>
     )
 }

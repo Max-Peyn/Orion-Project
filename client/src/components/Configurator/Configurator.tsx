@@ -9,7 +9,7 @@ import { UIHeader } from '../ui/UIHeader';
 import { ControlsPanel } from '../controls/ControlsPanel';
 import { ModalsSection } from '../modals/ModalsSection';
 import type { FavouriteModel } from '../../types/managers';
-import { ThreeReact } from '../../three/init/react';
+import {SceneModels} from '../../three/init/sceneModels'
 
 
 export const Configurator: React.FC = () => {
@@ -27,8 +27,8 @@ export const Configurator: React.FC = () => {
 
 
     const [colors, setColors] = useState('')
-
-
+    const [vehicle, setVehicle] = useState<'left' | 'right'>('left')
+    console.log("Поточний стан:", vehicle, "Тип даних:", typeof vehicle);
     const modalsState = useModalsState();
     const controlsState = useControlsState();
 
@@ -76,7 +76,7 @@ export const Configurator: React.FC = () => {
     return (
         <div className="configurator">
             {/* <Canvas3D onSceneReady={(ref) => { sceneRef.current = ref.current; }} /> */}
-            <ThreeReact color={colors}/>
+            <SceneModels color={colors} currentVehicle={vehicle}/>
             {currentVehicle && (
                 <>
                     <UIHeader
@@ -87,7 +87,7 @@ export const Configurator: React.FC = () => {
                         onAuthClick={modalsState.openAuthModal}
                         onBrochuresClick={modalsState.openBrochures}
                         onFavouritesClick={modalsState.openFavourites}
-                        onNavigate={handleVehicleSwitch}
+                        onNavigate={setVehicle}
                     />
 
                     <ControlsPanel

@@ -7,7 +7,7 @@ type ModelsProps = {
     color: string;
 }
 
-export const Models:React.FC<ModelsProps> = ({color}) => {
+export const ModelSprinter:React.FC<ModelsProps> = ({color}) => {
     const { scene } = useGLTF('/models/mersedes/SprinterOptimized.glb');
     useEffect(() => {
         scene.traverse((child) => {
